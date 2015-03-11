@@ -1,5 +1,6 @@
 require 'fog'
 require 'dragonfly'
+require 'json'
 
 Dragonfly::App.register_datastore(:s3){ Dragonfly::S3DataStore }
 
@@ -148,14 +149,14 @@ module Dragonfly
     def headers_to_meta(headers)
       json = headers['x-amz-meta-json']
       if json && !json.empty?
-        Serializer.json_decode(json)
+        JSON.parse(json)
       elsif marshal_data = headers['x-amz-meta-extra']
         Utils.stringify_keys(Serializer.marshal_b64_decode(marshal_data))
       end
     end
 
     def meta_to_headers(meta)
-      {'x-amz-meta-json' => Serializer.json_encode(meta)}
+      {'x-amz-meta-json' => JSON.generate(meta, ascii_only: true)}
     end
 
     def valid_regions
