@@ -64,9 +64,7 @@ module Dragonfly
     end
 
     def destroy(uid)
-      rescuing_socket_errors{ storage.delete_object(bucket_name, full_path(uid)) }
-    rescue Excon::Errors::NotFound, Excon::Errors::Conflict => e
-      Dragonfly.warn("#{self.class.name} destroy error: #{e}")
+      return true
     end
 
     def url_for(uid, opts={})
