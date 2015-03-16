@@ -75,7 +75,7 @@ module Dragonfly
         host   = opts[:host]   || url_host || (
           bucket_name =~ SUBDOMAIN_PATTERN ? "#{bucket_name}.s3.amazonaws.com" : "s3.amazonaws.com/#{bucket_name}"
         )
-        "#{scheme}://#{host}/#{full_path(uid)}"
+        "https://#{host}/#{full_path(uid)}"
       end
     end
 
