@@ -44,7 +44,17 @@ module Dragonfly
 
       headers = {'Content-Type' => content.mime_type}
       headers.merge!(opts[:headers]) if opts[:headers]
-      uid = opts[:path] || generate_uid(content.name || 'file')
+
+      uid = if opts[:path]
+              opts[:path]
+            elsif content.name
+              generate_uid(content.name)
+            else
+              ext = content.analyse(:format)
+              headers['Content-Type'] = 'image/' + ext if headers['Content-Type'] == 'application/octet-stream'
+              ext = 'jpg' if ext == 'jpeg'
+              generate_uid(SecureRandom.hex + '.' + ext)
+            end
 
       rescuing_socket_errors do
         content.file do |f|
