@@ -68,7 +68,9 @@ module Dragonfly
     def read(uid)
       ensure_configured
       response = rescuing_socket_errors{ storage.get_object(bucket_name, full_path(uid)) }
-      [response.body, headers_to_meta(response.headers)]
+      meta = headers_to_meta(response.headers)
+      meta["name"] = File.basename(uid) if meta["name"].blank?
+      [response.body, meta]
     rescue Excon::Errors::NotFound => e
       nil
     end
