@@ -42,7 +42,7 @@ module Dragonfly
       ensure_configured
       ensure_bucket_initialized
 
-      headers = {'Content-Type' => content.mime_type}
+      headers = {'Content-Type' => content.mime_type, 'Cache-Control' => 'max-age=31536000'}
       headers.merge!(opts[:headers]) if opts[:headers]
 
       uid = if opts[:path]
